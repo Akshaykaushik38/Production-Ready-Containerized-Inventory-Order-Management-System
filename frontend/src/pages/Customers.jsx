@@ -22,9 +22,7 @@ const Customers = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
+  useEffect(() => { fetchCustomers(); }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this customer?")) return;
@@ -44,10 +42,7 @@ const Customers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email) {
-      Toast.error("Name and Email are required");
-      return;
-    }
+    if (!form.name || !form.email) { Toast.error("Name and Email are required"); return; }
     setSubmitting(true);
     try {
       const res = await api.post("/customers", form);
@@ -63,16 +58,27 @@ const Customers = () => {
   };
 
   const columns = [
-    { Header: "Customer ID", accessor: "id" },
-    { Header: "Name", accessor: "name" },
-    { Header: "Email", accessor: "email" },
-    { Header: "Phone", accessor: "phone" },
     {
-      Header: "Actions",
-      accessor: "id",
+      Header: "ID", accessor: "id",
+      Cell: (row) => <span className="badge badge-indigo">#{row.id}</span>,
+    },
+    {
+      Header: "Name", accessor: "name",
+      Cell: (row) => <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>{row.name}</span>,
+    },
+    {
+      Header: "Email", accessor: "email",
+      Cell: (row) => <span style={{ color: "#a5b4fc" }}>{row.email}</span>,
+    },
+    {
+      Header: "Phone", accessor: "phone",
+      Cell: (row) => <span style={{ color: "var(--text-secondary)" }}>{row.phone || "—"}</span>,
+    },
+    {
+      Header: "Actions", accessor: "id",
       Cell: (row) => (
-        <button className="btn btn-danger" onClick={() => handleDelete(row.id)}>
-          Delete
+        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(row.id)}>
+          🗑 Remove
         </button>
       ),
     },
@@ -80,62 +86,40 @@ const Customers = () => {
 
   return (
     <div className="container">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl" style={{ color: "var(--primary)" }}>Customers</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Customers</h1>
+          <p className="page-subtitle">{customers.length} registered accounts</p>
+        </div>
         <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
-          Add Customer
+          + Add Customer
         </button>
       </div>
 
       <Table data={customers} columns={columns} loading={loading} />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div style={{ minWidth: "320px", padding: "0.5rem" }}>
-          <h3 className="text-xl mb-4" style={{ color: "var(--primary)" }}>Add Customer</h3>
-          <form onSubmit={handleSubmit} className="form">
-            <label>
-              Full Name *
-              <input
-                className="input"
-                name="name"
-                value={form.name}
-                onChange={handleInputChange}
-                required
-                placeholder="John Doe"
-              />
-            </label>
-            <label>
-              Email Address *
-              <input
-                className="input"
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleInputChange}
-                required
-                placeholder="john@example.com"
-              />
-            </label>
-            <label>
-              Phone Number
-              <input
-                className="input"
-                name="phone"
-                value={form.phone}
-                onChange={handleInputChange}
-                placeholder="+1 234-567-8900"
-              />
-            </label>
-            <div className="flex gap-2" style={{ marginTop: "1.5rem" }}>
-              <button type="submit" className="btn btn-primary" disabled={submitting}>
-                {submitting ? "Adding..." : "Add Customer"}
-              </button>
-              <button type="button" className="btn" onClick={() => setIsModalOpen(false)}>
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
+        <h3 className="text-xl mb-4" style={{ color: "var(--indigo-light)" }}>👤 Add Customer</h3>
+        <form onSubmit={handleSubmit} className="form">
+          <label>
+            Full Name *
+            <input className="input" name="name" value={form.name} onChange={handleInputChange} required placeholder="John Doe" />
+          </label>
+          <label>
+            Email Address *
+            <input className="input" type="email" name="email" value={form.email} onChange={handleInputChange} required placeholder="john@example.com" />
+          </label>
+          <label>
+            Phone Number
+            <input className="input" name="phone" value={form.phone} onChange={handleInputChange} placeholder="+1 234-567-8900" />
+          </label>
+          <div className="flex gap-2 mt-4">
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? "Adding…" : "+ Add Customer"}
+            </button>
+            <button type="button" className="btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
+          </div>
+        </form>
       </Modal>
     </div>
   );

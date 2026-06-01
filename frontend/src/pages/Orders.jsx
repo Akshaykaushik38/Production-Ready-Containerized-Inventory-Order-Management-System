@@ -1,3 +1,4 @@
+// src/pages/Orders.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
@@ -20,24 +21,38 @@ const Orders = () => {
     }
   };
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const handleRowClick = (id) => {
-    navigate(`/orders/${id}`);
-  };
+  useEffect(() => { fetchOrders(); }, []);
 
   const columns = [
-    { Header: "Order ID", accessor: "id" },
-    { Header: "Customer", accessor: "customer_name" },
-    { Header: "Total Amount", accessor: "total_amount", Cell: (row) => `$${parseFloat(row.total_amount).toFixed(2)}` },
     {
-      Header: "Actions",
-      accessor: "id",
+      Header: "Order ID", accessor: "id",
       Cell: (row) => (
-        <button className="btn btn-primary" onClick={() => handleRowClick(row.id)}>
-          View Details
+        <span className="badge badge-indigo">#{row.id}</span>
+      ),
+    },
+    {
+      Header: "Customer", accessor: "customer_name",
+      Cell: (row) => (
+        <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>{row.customer_name}</span>
+      ),
+    },
+    {
+      Header: "Total Amount", accessor: "total_amount",
+      Cell: (row) => (
+        <span style={{ color: "#34d399", fontWeight: 700, fontSize: "0.9rem" }}>
+          ${parseFloat(row.total_amount).toFixed(2)}
+        </span>
+      ),
+    },
+    {
+      Header: "Status", accessor: "status",
+      Cell: () => <span className="badge badge-emerald">● Confirmed</span>,
+    },
+    {
+      Header: "Actions", accessor: "actions",
+      Cell: (row) => (
+        <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${row.id}`)}>
+          View Details →
         </button>
       ),
     },
@@ -45,10 +60,13 @@ const Orders = () => {
 
   return (
     <div className="container">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl" style={{ color: "var(--primary)" }}>Orders</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Orders</h1>
+          <p className="page-subtitle">{orders.length} total orders processed</p>
+        </div>
         <button className="btn btn-primary" onClick={() => navigate("/orders/new")}>
-          Create Order
+          + Create Order
         </button>
       </div>
       <Table data={orders} columns={columns} loading={loading} />

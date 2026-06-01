@@ -4,43 +4,49 @@ import PropTypes from "prop-types";
 
 export const Table = ({ columns, data, loading }) => {
   return (
-    <div className="overflow-x-auto">
-      <table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <th key={col.accessor}>
-                {col.Header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
+    <div className="table-container">
+      <div className="overflow-x-auto">
+        <table>
+          <thead>
             <tr>
-              <td colSpan={columns.length} style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}>
-                Loading records...
-              </td>
+              {columns.map((col) => (
+                <th key={col.accessor}>{col.Header}</th>
+              ))}
             </tr>
-          ) : data.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.4)" }}>
-                No records found.
-              </td>
-            </tr>
-          ) : (
-            data.map((row, i) => (
-              <tr key={row.id || i}>
-                {columns.map((col) => (
-                  <td key={col.accessor}>
-                    {col.Cell ? col.Cell(row) : row[col.accessor]}
-                  </td>
-                ))}
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={columns.length}>
+                  <div className="empty-state">
+                    <span className="empty-state-icon">⟳</span>
+                    <span className="empty-state-text">Loading records…</span>
+                  </div>
+                </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : data.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length}>
+                  <div className="empty-state">
+                    <span className="empty-state-icon">📂</span>
+                    <span className="empty-state-text">No records found</span>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              data.map((row, i) => (
+                <tr key={row.id || i}>
+                  {columns.map((col) => (
+                    <td key={col.accessor}>
+                      {col.Cell ? col.Cell(row) : row[col.accessor]}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

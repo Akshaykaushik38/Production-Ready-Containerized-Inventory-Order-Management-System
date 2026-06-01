@@ -14,8 +14,8 @@ A full-stack **Inventory & Order Management System** built for businesses to man
 | Service | URL |
 |---------|-----|
 | **Frontend (Vercel)** | https://frontend-phi-drab-26.vercel.app |
-| **Backend API (Render)** | _Deploying..._ |
-| **API Documentation** | _Deploying..._ `/docs` |
+| **Backend API (Render)** | https://inventory-order-backend-i74n.onrender.com |
+| **API Documentation** | https://inventory-order-backend-i74n.onrender.com/docs |
 | **Docker Hub Image** | https://hub.docker.com/r/akshaykaushik38/inventory-order-backend |
 
 ---

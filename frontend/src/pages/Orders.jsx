@@ -40,7 +40,7 @@ const Orders = () => {
       Header: "Total Amount", accessor: "total_amount",
       Cell: (row) => (
         <span style={{ color: "#34d399", fontWeight: 700, fontSize: "0.9rem" }}>
-          ${parseFloat(row.total_amount).toFixed(2)}
+          ₹{parseFloat(row.total_amount).toFixed(2)}
         </span>
       ),
     },

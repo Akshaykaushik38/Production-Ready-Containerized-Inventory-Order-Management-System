@@ -67,7 +67,7 @@ const Dashboard = () => {
       accessor: "price",
       Cell: (row) => (
         <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>
-          ${parseFloat(row.price).toFixed(2)}
+          ₹{parseFloat(row.price).toFixed(2)}
         </span>
       ),
     },

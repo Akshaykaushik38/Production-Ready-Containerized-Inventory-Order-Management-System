@@ -47,7 +47,7 @@ const Products = () => {
       Header: "Price", accessor: "price",
       Cell: (row) => (
         <span style={{ color: "#a5b4fc", fontWeight: 600 }}>
-          ${parseFloat(row.price).toFixed(2)}
+          ₹{parseFloat(row.price).toFixed(2)}
         </span>
       ),
     },

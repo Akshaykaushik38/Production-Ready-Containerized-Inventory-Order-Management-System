@@ -41,12 +41,12 @@ const OrderDetail = () => {
     <div className="order-detail glass-card container">
       <h1 className="title">Order #{order.id}</h1>
       <p><strong>Customer:</strong> {order.customer_name}</p>
-      <p><strong>Total:</strong> ${parseFloat(order.total_amount).toFixed(2)}</p>
+      <p><strong>Total:</strong> ₹{parseFloat(order.total_amount).toFixed(2)}</p>
       <h2 className="subtitle">Items</h2>
       <ul className="item-list">
         {order.items?.map((item) => (
           <li key={item.id} className="item">
-            {item.product_name} — Qty: {item.quantity} — ${parseFloat(item.price_at_purchase).toFixed(2)}
+            {item.product_name} — Qty: {item.quantity} — ₹{parseFloat(item.price_at_purchase).toFixed(2)}
           </li>
         ))}
       </ul>

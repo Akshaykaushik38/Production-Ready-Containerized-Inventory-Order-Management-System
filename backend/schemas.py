@@ -87,7 +87,7 @@ class ProductResponse(ProductBase):
 class CustomerBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255, description="Full Name")
     email: str = Field(..., description="Email Address")
-    phone: Optional[str] = Field(None, description="Phone Number")
+    phone: Optional[str] = Field(None, max_length=50, description="Phone Number")
 
     @field_validator("email")
     @classmethod
@@ -95,8 +95,6 @@ class CustomerBase(BaseModel):
         v = v.strip().lower()
         if not re.match(EMAIL_REGEX, v):
             raise ValueError("Invalid email address format")
-        if not v.endswith(".com"):
-            raise ValueError("Only .com emails are allowed")
         return v
 
     @field_validator("name")
@@ -109,17 +107,7 @@ class CustomerBase(BaseModel):
 
 
 class CustomerCreate(CustomerBase):
-    phone: str = Field(..., description="Phone Number")
-
-    @field_validator("phone")
-    @classmethod
-    def validate_phone(cls, v: str) -> str:
-        if not v:
-            raise ValueError("Phone number is required")
-        v = re.sub(r"\D", "", v.strip())
-        if len(v) != 10:
-            raise ValueError("Phone number must be exactly 10 digits")
-        return v
+    pass
 
 
 class CustomerResponse(CustomerBase):

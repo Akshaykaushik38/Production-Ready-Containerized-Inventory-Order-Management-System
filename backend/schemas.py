@@ -87,7 +87,7 @@ class ProductResponse(ProductBase):
 class CustomerBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255, description="Full Name")
     email: str = Field(..., description="Email Address")
-    phone: str = Field(..., description="Phone Number")
+    phone: Optional[str] = Field(None, description="Phone Number")
 
     @field_validator("email")
     @classmethod
@@ -107,17 +107,19 @@ class CustomerBase(BaseModel):
             raise ValueError("Name cannot be empty")
         return v
 
+
+class CustomerCreate(CustomerBase):
+    phone: str = Field(..., description="Phone Number")
+
     @field_validator("phone")
     @classmethod
     def validate_phone(cls, v: str) -> str:
+        if not v:
+            raise ValueError("Phone number is required")
         v = re.sub(r"\D", "", v.strip())
         if len(v) != 10:
             raise ValueError("Phone number must be exactly 10 digits")
         return v
-
-
-class CustomerCreate(CustomerBase):
-    pass
 
 
 class CustomerResponse(CustomerBase):

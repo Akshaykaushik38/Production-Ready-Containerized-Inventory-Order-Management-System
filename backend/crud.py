@@ -104,6 +104,14 @@ def create_customer(db: Session, customer: schemas.CustomerCreate) -> models.Cus
             detail=f"Customer with email '{customer.email}' already exists"
         )
         
+    # Validate Phone uniqueness
+    db_customer_phone = db.query(models.Customer).filter(models.Customer.phone == customer.phone).first()
+    if db_customer_phone:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Customer with phone number '{customer.phone}' already exists"
+        )
+
     db_customer = models.Customer(
         name=customer.name,
         email=customer.email,

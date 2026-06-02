@@ -37,12 +37,46 @@ const Customers = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    if (name === "phone") {
+      // Only keep digits and limit to 10 characters
+      const cleaned = value.replace(/\D/g, "").slice(0, 10);
+      setForm(prev => ({ ...prev, [name]: cleaned }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email) { Toast.error("Name and Email are required"); return; }
+    if (!form.name || !form.email || !form.phone) { 
+      Toast.error("All fields (Name, Email, and Phone) are required"); 
+      return; 
+    }
+
+    // Phone number must be exactly 10 digits
+    if (form.phone.length !== 10) {
+      Toast.error("Phone number must be exactly 10 digits");
+      return;
+    }
+
+    // Email address must end with .com
+    if (!form.email.toLowerCase().endsWith(".com")) {
+      Toast.error("Email address must end with .com");
+      return;
+    }
+
+    // Ensure customer doesn't already exist (by email or phone)
+    const emailExists = customers.some(c => c.email.toLowerCase() === form.email.toLowerCase());
+    const phoneExists = customers.some(c => c.phone === form.phone);
+    if (emailExists) {
+      Toast.error("Customer with this email already exists");
+      return;
+    }
+    if (phoneExists) {
+      Toast.error("Customer with this phone number already exists");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await api.post("/customers", form);
@@ -110,8 +144,8 @@ const Customers = () => {
             <input className="input" type="email" name="email" value={form.email} onChange={handleInputChange} required placeholder="john@example.com" />
           </label>
           <label>
-            Phone Number
-            <input className="input" name="phone" value={form.phone} onChange={handleInputChange} placeholder="+1 234-567-8900" />
+            Phone Number *
+            <input className="input" name="phone" value={form.phone} onChange={handleInputChange} required placeholder="+91" />
           </label>
           <div className="flex gap-2 mt-4">
             <button type="submit" className="btn btn-primary" disabled={submitting}>
